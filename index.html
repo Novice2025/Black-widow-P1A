@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fluent English Workshop</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Optional: Smooth transition for state changes */
+        .transition-all { transition-property: all; }
+        .transition-duration-300 { transition-duration: 300ms; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <div id="app" class="p-4 sm:p-8">
+        <!-- Content will be rendered here by JavaScript -->
+    </div>
+
+    <script>
+        // --- DATA ---
+        const teacherName = "Professor Daby";
+
+        const transcript = `
+    00:00:03 [Music] foreign [Music] [Music] foreign
+    00:00:38 [Music] foreign
+    00:01:07 [Music] [Music] I didn't even hear you come in. You want me to leave? foreign
+    00:01:47 [Music] foreign thank you. no problem sir. I miss you so much. not more than I'm
+    00:02:18 gonna miss you. Call me when you land, Miss Miller. As soon as I land. [Music] foreign [Music]
+    00:03:05 [Music] hmm hello
+    00:03:46 somebody out there. thank you. wait [Music] [Music] foreign
+    00:04:30 [Music] happy birthday bro. thank you. thank you. It's the bread maker, Mom. Guys, it's not the knife. I forget, how old are you this year? It's classified. Okay, well that works for me. Thank you. Glad you can make it. I heard you might be working. Well, I should be working today. I mean, even though we got the clinic up and running, there's still
+    00:04:60 so much to do. How's it going? Oh, it's exhausting but it's awesome. That woman I told you about, it's amazing what she's done. Now, you were listening last week when I told you about it, right? Yeah, I think you referred to her as the angel on Earth woman. I don't know, joke all you want, but if it wasn't for her donations and her guidance we would have had to close down the clinic. You know I'm kidding, right? As long as you weren't kidding about me inviting her to your birthday party, you're still my favorite brother-in-law. birthday boy. hello. happy birthday.
+    00:05:27 I would say I'm sorry for being late, but fortunately you've known me for a long time and already accepted me.
+    `;
+
+        const expressions = [
+            { id: 1, native: "Black Widow", context: "A cultural and literal term, often used as a movie title.", brazilianLiteral: "Viúva Negra.", brazilianError: "Using the term only to refer to the movie character without knowing the original meaning.", correction: "A **Black Widow** is a type of spider 🕷️ where the female sometimes eats the male after mating. Colloquially, we use this term to describe a woman who kills her husband(s) or lover(s). The film title refers to the Marvel superhero. It is a powerful, dark name. ", color: "bg-gray-100 border-gray-700", emoji: "🕷️" },
+            { id: 2, native: "God, I didn't even hear you come in.", context: "Used when someone arrives silently and you are surprised by their sudden presence. The word 'even' is key!", brazilianLiteral: "Nossa, eu nem te ouvi chegar! (The *nem* covers the 'even'!)", brazilianError: "I didn't listen to you arrive. (Mixing 'listen'/'hear' or missing the emphasis of 'even')", correction: "This is a triple-threat expression! First, **'God'** (or 'My God') is a classic, punchy interjection expressing **genuine shock** or surprise, similar to *'Nossa!'* or *'Caramba!'* Second, the tiny word **'even'** is an absolute intensifier, perfectly translating the Brazilian **'nem'** (as in, *'Eu nem te ouvi chegar!'*). You absolutely need it! Third, the phrasal verb **'come in'** is the natural choice for *entering* a room. Use this whenever someone sneaks up on you!", color: "bg-indigo-100 border-indigo-500", emoji: "🤫" },
+            { id: 3, native: "You want me to leave?", context: "A casual question used to quickly confirm a request or express mild surprise.", brazilianLiteral: "Você quer que eu saia?", brazilianError: "Do you want me to leave? (Grammatically correct but too formal/slow for this conversation).", correction: "This is a key native fluency trick! In friendly or casual English, we often **omit the auxiliary verb 'Do'** and let the **rising intonation** (as heard when saying the sentence) tell the listener it's a question. So, instead of the full 'Do you want...', we say 'You want...?' You can use this for quick confirmations: **'You ready?'** (Are you ready?) or **'You coming?'** (Are you coming?)", color: "bg-teal-100 border-teal-500", emoji: "❓" },
+            { id: 4, native: "Are you kidding?", context: "Used to express disbelief, surprise, or friendly mockery in a relaxed conversation.", brazilianLiteral: "Você está brincando?", brazilianError: "Are you joking? (Less common) or simply staring in disbelief without saying anything.", correction: "This is the most natural way to express playful disbelief or shock in English. It's often shortened to **'You kidding?'** or intensified with 'me': **'Are you kidding me?'** Use this when something sounds impossible, outrageous, or wonderfully surprising (like 'Não acredito!').", color: "bg-orange-200 border-orange-600", emoji: "😮" },
+            { id: 5, native: "Can you get used to this?", context: "Asking if someone can adapt to a new routine, situation, or environment.", brazilianLiteral: "Você consegue se acostumar com isso?", brazilianError: "Can you be familiar with this? (Missing the sense of *becoming* accustomed)", correction: "The phrase **'to get used to'** means 'to become accustomed or adapted to something new.' This is a common pattern: **'to get used to + [Noun or Gerund]'**. Brazilians often miss the crucial verb **'get'** (to become) and use only 'be used to' (which means 'acustomed to,' but not the process of adapting). Example: **'I got used to waking up early.'**", color: "bg-blue-200 border-blue-600", emoji: "🔄" },
+            { id: 6, native: "no problem", context: "A common, casual, and friendly response to 'Thank you,' replacing 'You're welcome.'", brazilianLiteral: "Sem problema. / Não há de quê.", brazilianError: "You're welcome. (Too formal/polite for casual interactions.)", correction: "This phrase is a powerhouse of native fluency! While **'You're welcome'** is grammatically correct, **'no problem'** is much more common and friendly in casual settings, exactly like saying *'magina,' 'tranquilo,'* or *'não há de quê'* in Portuguese. It signals that helping you was easy and not a bother.", color: "bg-fuchsia-100 border-fuchsia-500", emoji: "👍" },
+            { id: 7, native: "not more than I'm gonna miss you", context: "A loving, reciprocal reply to 'I miss you so much.'", brazilianLiteral: "Não mais do que eu vou sentir sua falta.", brazilianError: "I will miss you more. / Not more than me.", correction: "This is a quick, natural way to express mutual feeling. It uses a concise structure: **'Not more than [Person] + [Verb Phrase]'**. It's much smoother than a full sentence like 'You won't miss me more than I will miss you.' **Gonna** (going to) is essential here for natural speed.", color: "bg-pink-100 border-pink-500", emoji: "❤️" },
+            { id: 8, native: "Call me when you land.", context: "Instruction given to a traveler after a flight.", brazilianLiteral: "Me liga quando você aterrissar.", brazilianError: "Call me when you arrive in the airplane.", correction: "This expression is a perfect example of why you need to match the verb of 'chegar' (to arrive) to the **context**! 1. **To Land:** Exclusively used for **air travel**. It means the plane touches the ground. We use **'take off'** for departure. 2. **To Come In:** Used for **entering a room or building** (as seen in expression ID 2: 'I didn't even hear you **come in**'). 3. **To Arrive:** The general verb for reaching a destination (e.g., *'I arrive in São Paulo.'*). Native speakers choose the most specific verb available. By using **'land'** here, you sound much more precise and natural!", color: "bg-green-100 border-green-500", emoji: "✈️" },
+            { id: 9, native: "It's classified.", context: "A humorous and polite way to refuse to answer a personal question (age, salary, etc.).", brazilianLiteral: "É classificado. / É segredo de estado.", brazilianError: "It's a secret. / I don't want to tell you.", correction: "**'It's classified'** is idiomatic and often used in a playful, movie-like tone, implying the information is too important for public knowledge. It's much funnier and more native than simply simply saying 'It's a secret.'", color: "bg-yellow-100 border-yellow-500", emoji: "🕵️" },
+            { id: 10, native: "Glad you can make it.", context: "Welcoming a guest who was potentially busy or had scheduling issues.", brazilianLiteral: "Que bom que você pôde fazer isso.", brazilianError: "Good that you could do it.", correction: "This is one of the most common and friendly phrases you'll hear when welcoming someone to an event, party, or meeting, especially if they were previously unsure about attending. It's crucial because it replaces the over-literal translation. The phrasal verb **'to make it'** is the key: it means to 'successfully arrive' or 'manage to attend' despite potential difficulties (like traffic, work, or a busy schedule). For Brazilians, this phrase conveys the feeling of: **'Que bom que deu certo!'**, **'Que bom que você conseguiu vir!'** ou **'Ainda bem que você veio!'** It's always used to show genuine relief and warmth. **Daily Examples:** 1. **(Meeting):** 'We started without you, but **glad you could make it!**' (Que bom que conseguiu chegar!) 2. **(Late arrival):** 'I didn't think you would **make it** through all that traffic!' (Eu não achei que você conseguiria passar por todo esse trânsito!) 3. **(Success/Survival):** It can also mean 'to succeed' or 'to survive' (e.g., 'He **made it** through college').", color: "bg-purple-100 border-purple-500", emoji: "🎉" },
+            { id: 11, native: "I should be working today.", context: "Expressing a mild sense of obligation or expectation that the speaker is missing work.", brazilianLiteral: "Eu deveria estar trabalhando hoje.", brazilianError: "I must work today. (Using 'must' which is too strong)", correction: "**'Should be + [Verb]-ing'** indicates that the speaker believes this is the *correct* or *expected* action, but they are choosing otherwise. **'Must'** is too strong (90% obligation), while **'Should'** is softer (50-70% obligation/expectation). This perfect use of 'should' shows fluency!", color: "bg-cyan-100 border-cyan-500", emoji: "🗓️" },
+            { id: 12, native: "How's it going?", context: "A very common, standard, and casual greeting.", brazilianLiteral: "Como está indo?", brazilianError: "How goes? (Literal translation of 'Como vai?')", correction: "This is one of the most essential greetings. The common answer is usually **'It's going well/great'** or **'Not too bad'** or **'It's exhausting but it's awesome'** (as in the transcript!). *Do not* use 'How goes?' or 'How do you do?'—those are outdated or too formal.", color: "bg-orange-100 border-orange-500", emoji: "👋" },
+            { id: 13, native: "Somebody out there.", context: "Used to acknowledge a potential, but unseen, presence, or to refer to the broader population/world.", brazilianLiteral: "Alguém lá fora.", brazilianError: "There is somebody outside. (Mixing up 'out there' with 'outside')", correction: "**'Somebody out there'** is used in two main ways. 1. **To acknowledge an unseen presence:** *'Is there **somebody out there**?'* (in a dark room, or forest). This is the sense used in the transcript when the character hears a noise. 2. **To refer to the general population:** *'Maybe **somebody out there** knows the answer.'* (Talvez alguém por aí saiba a resposta.) It's much more common than saying 'somebody in the world' or 'somebody in the universe.' It conveys a sense of hope that a solution or person exists *somewhere*.", color: "bg-lime-100 border-lime-600", emoji: "👤" },
+            { id: 14, native: "It's the bread maker, Mom got us.", context: "Casual conversation referring to a gift bought by a family member, with omitted words.", brazilianLiteral: "É a máquina de pão que a mãe conseguiu para nós.", brazilianError: "It's the bread maker that Mom got to us. (Missing the natural flow and use of 'got').", correction: "This is a perfect example of casual, native English where words are **omitted** and verbs are simplified. The full grammatical sentence is: 'It's the bread maker **that** Mom got **for** us.' 1. **Omission of 'that':** When the relative pronoun (**'that'** or **'which'**) is the **object** of the following clause, native speakers almost always drop it! This sounds much more fluent. 2. **'Got us':** Here, **'got'** is used informally as a substitute for **'bought for'** or **'acquired for.'** In Portuguese, this sounds like: **'É a máquina de pão que a mãe deu/comprou pra gente'** ou **'É o presente da mãe pra gente!'**", color: "bg-amber-100 border-amber-600", emoji: "🎁" },
+            { id: 15, native: "even though we got the clinic up and running", context: "Discussing a medical facility's operational status despite ongoing workload.", brazilianLiteral: "Mesmo que a gente conseguiu a clínica em pé e correndo.", brazilianError: "Even so we got the clinic running. (Mixing up 'even though' and using 'running' literally.)", correction: "This phrase covers three critical fluency points. 1. **'Even Though'**: This means 'although' or 'in spite of the fact that' (**apesar de** ou **embora**). It introduces a strong contrast. 2. **'Up and Running'**: This is a great idiom meaning **'fully operational'**, **'funcional'**, or **'pronto para uso'**. You use it for systems, businesses, or projects that are complete enough to be utilized. 3. **'Clinic** vs. Hospital**: In English, a **clinic** is generally smaller, like a **consultório** or **posto de saúde**. It focuses on **outpatient care** (or **'atendimento ambulatorial'**), meaning patients visit for treatment and then go home; they do not stay overnight. A **hospital** is a large facility for complex care and overnight stays.", color: "bg-indigo-200 border-indigo-700", emoji: "🏥" },
+            { id: 16, native: "if it wasn't for her guidance we would have had to close down", context: "A complex but crucial Third Conditional structure for expressing hypothetical past scenarios.", brazilianLiteral: "Se não fosse pela orientação dela, nós teríamos que fechar.", brazilianError: "If she didn't help, we closed the clinic. (Mixing tenses/incorrect conditional)", correction: "This is the **Third Conditional** pattern, which is used to describe an **unreal or hypothetical situation in the past** (something that *did not* happen). 1. **The Condition**: The most native way to express the condition is: **'If it wasn't for [Person/Thing]'** (Se não fosse por...). 2. **The Result**: The consequence uses the perfect modal verb: **'[Subject] + would have + [Past Participle]'**. 3. **'Close Down'**: This is a key phrasal verb meaning to **'close permanently'** or **'stop operating'** (**fechar as portas**, **encerrar as atividades**). The full sentence means: The clinic was saved, but *if that guidance hadn't existed*, they would have been forced to permanently shut down.", color: "bg-red-100 border-red-500", emoji: "🤯" },
+            { id: 17, native: "I'm sorry for being late.", context: "The standard, polite apology for arriving after the scheduled or expected time.", brazilianLiteral: "Eu sinto muito por estar atrasado.", brazilianError: "Sorry for the delay. / I was delayed. (Using 'delay' when referring to themselves in a social context.)", correction: "Brazilians often confuse **'late'** and **'delay'**. **'Late'** is the adjective you MUST use when talking about a person being behind schedule or an event happening after its time. **'Delay'** is typically used as a noun or verb for *things* or *systems* (**logistics, traffic, flights**). For a social apology, always use: **'I'm sorry for being late'** (or just **'Sorry I'm late'**). Only use 'delay' when describing the cause: 'Traffic caused the **delay**.'", color: "bg-teal-100 border-teal-600", emoji: "⏰" },
+            { id: 18, native: "And she shows up and bang, out of the blue we are in business.", context: "Used to describe something happening unexpectedly, leading to sudden success or operation.", brazilianLiteral: "Do nada nós estamos em negócio.", brazilianError: "She arrived outside the blue. / We are in trade.", correction: "This short quote contains two powerful fluency boosters! 1. **'Out of the blue'**: This is an idiom meaning something happens **unexpectedly**, **suddenly**, or **without warning** (like 'do nada' or 'de repente'). 2. **'We are in business'**: This is an idiom meaning a plan, project, or venture is now **ready to go**, **fully operational** or **successful**. It replaces phrases like 'Estamos prontos para começar!'", color: "bg-fuchsia-200 border-fuchsia-700", emoji: "🚀" },
+            { id: 19, native: "Oh believe me, I wish I had that kind of money.", context: "Used to express desire for a specific, often large, sum of money mentioned in the conversation.", brazilianLiteral: "Eu desejo ter esse tipo de dinheiro.", brazilianError: "I wish I had all that money. / Todo este dinheiro.", correction: "The phrase **'that kind of money'** is the standard, fluent idiom used to refer to a **specific, usually large, amount of money** that was just discussed (in the transcript's context, the money donated to the clinic). This is the natural way to say **'essa quantia/tipo de dinheiro'** or **'todo esse dinheiro'** with a feeling of awe or wistfulness. It's much more conversational and natural than saying 'that amount of money.'", color: "bg-lime-200 border-lime-700", emoji: "💰" },
+            { id: 20, native: "I just provide the startup and spearhead the fundraising for the rest.", context: "Discussing who is responsible for initiating a project versus who is responsible for the main implementation/funding drive.", brazilianLiteral: "Eu só dou a partida e lança a arrecadação de fundos para o restante.", brazilianError: "I provided the beginning and spear had the rest. (Literal translation of 'spear' which means 'lança'.)", correction: "This sentence contains two business-related terms: 1. **'Startup'**: In this context, it doesn't refer to a tech company, but rather the **initial kick-off** or **seed funding** of the project (**o pontapé inicial** ou **a parte inicial**). 2. **'Spearhead'**: This is the crucial correction. The word **'spearhead'** is the verb that means **'to lead'**, **'to champion'**, or **'to be the principal organizer'** (**liderar**, **encabeçar**, ou **ser o principal responsável**). The character is saying they only provided the start, and someone else **led the main effort** (spearhead the fundraising) for the rest of the project.", color: "bg-rose-200 border-rose-700", emoji: "💡" },
+            { id: 21, native: "And then once It’s up and running Smoothly.", context: "Referring to the time when a new system or project is fully operational and problem-free.", brazilianLiteral: "E então uma vez que está em pé e correndo tranquilamente.", brazilianError: "Once it's running good. (Missing the idiomatic 'up and running' and using 'good' instead of 'smoothly' or 'well'.)", correction: "This phrase is great for business and project management conversations. It combines the vital idiom **'up and running'** (fully operational, funcional) with the adverb **'smoothly'**. The word **'smoothly'** means 'without any problems or difficulties' (tranquilamente, sem interrupções). When you say a project is running **smoothly**, you mean it's working **perfectly** and requires minimal oversight. Example: 'The launch went **smoothly**.'", color: "bg-sky-100 border-sky-600", emoji: "⚙️" },
+            { id: 22, native: "I’ll turn it over to the jail.", context: "Used in a legal or custody context, meaning to transfer possession or responsibility of a person or item to an authority.", brazilianLiteral: "Eu vou virar isso para a prisão.", brazilianError: "I will turn it over to the prison. (Missing the idiomatic meaning of 'turn over' and the context of custody.)", correction: "The phrasal verb **'to turn over (to)'** is essential here. It means to **transfer custody**, **control**, or **responsibility** to another person or organization (**entregar** ou **passar a custódia**). The 'it' in this sentence refers implicitly to the prisoner or the case/custody itself. **'Jail'** generally means a local facility for short sentences or holding people awaiting trial, while **'prison'** is a state/federal facility for long sentences (though the words are often used interchangeably in casual talk).", color: "bg-red-200 border-red-700", emoji: "🚔" },
+            { id: 23, native: "What do you do, Mell?", context: "The most common and natural way to ask about someone's profession or line of work.", brazilianLiteral: "O que você faz, Mell?", brazilianError: "What is your job? / What do you work with? (Direct literal translations that sound unnatural.)", correction: "This is the most important question for determining someone's **profession** or **occupation**. Brazilians often translate literally: 'What is your job?' or 'What do you work with?'. The native standard is always **'What do you do?'** (O que você faz?) or **'What do you do for a living?'** (O que você faz da vida?). It's simple, direct, and avoids grammatical errors. Always prefer this construction!", color: "bg-yellow-200 border-yellow-800", emoji: "💼" },
+            { id: 24, native: "That sounds exciting.", context: "Reacting positively and enthusiastically to news, a story, or a plan someone just described.", brazilianLiteral: "Isso soa animador.", brazilianError: "That is exciting. / That looks exciting. (Mixing up sensory verbs or using 'is' incorrectly.)", correction: "In English, we use the verb **'to sound'** (soar) to describe how something seems or feels based on information we **hear** or an idea we **read**. It means *'Isso parece/soa como...'*. Brazilians often miss this and say 'That **is** exciting' (which is a fact statement) or 'That **looks** exciting' (which is for visual things). Use 'sound' when you are *reacting to words*! Examples: **'That sounds like a great plan.'** or **'The movie sounds boring.'**", color: "bg-emerald-100 border-emerald-600", emoji: "🤩" },
+            { id: 25, native: "Next week, my assignment to take portraits of the mayor’s dog.", context: "Describing a scheduled professional task or duty.", brazilianLiteral: "Próxima semana, minha tarefa/missão de tirar retratos do cachorro do prefeito.", brazilianError: "In the next week, my job to take pictures of the dog. (Adding the preposition 'in' and using 'job' instead of 'assignment').", correction: "This phrase highlights two major fluency points. 1. **Time Expressions**: You **NEVER** use a preposition (like 'in,' 'on,' or 'at') before time phrases starting with **'Next,'** **'Last,'** **'This,'** or **'Every.'** (e.g., *'Next week,'* *'Last night,'* *'This month'*). Brazilians often say 'in the next week' because of literal translation, but the native standard omits the preposition. 2. **'Assignment'**: This noun is perfect here. It means a **specific task, job, or duty** that has been officially assigned or delegated (like a **tarefa** or **missão**). It implies a professional or structured obligation, unlike the generic 'job' or 'task.'", color: "bg-blue-100 border-blue-800", emoji: "📸" },
+            { id: 26, native: "I just found out today, that’s why I’m late.", context: "Explaining the reason for a late arrival by stating when the information was discovered.", brazilianLiteral: "Eu apenas achei hoje, por isso eu sou atrasado.", brazilianError: "I just found today. / I am delay. (Misusing 'find' instead of the phrasal verb 'find out' and using the wrong word for 'late').", correction: "This phrase is great for apologies! 1. **'Found Out'**: This phrasal verb is crucial for native fluency. It means **'to discover'** or **'to learn a piece of information, often suddenly'** (**fiquei sabendo, descobri**). Do not use 'find' alone, which generally means 'to locate an object' (achar). 2. **'I'm Late'**: This reinforces Expression 17. Use the adjective **'late'** (atrasado) when referring to a person's schedule. Never say 'I am delay' or 'I am delayed' in a social context; use 'I was delayed *by* traffic' for things or systems.", color: "bg-pink-200 border-pink-700", emoji: "📰" },
+            { id: 27, native: "They want to showcase my work in their one to watch series.", context: "Describing a plan by a magazine or media outlet to feature the speaker's work in a favorable light.", brazilianLiteral: "Eles querem mostrar meu trabalho na série deles de um para assistir.", brazilianError: "They want to *show* my work. (Missing the special nuance of 'showcase') or 'one to look at'.", correction: "This sentence contains two excellent pieces of vocabulary! 1. **'Showcase'** (Exposição, Vitrine) is much stronger than 'show' (mostrar). As a verb, **'to showcase'** means 'to display or present the very best qualities or features of someone or something' (**destacar, expor o que há de melhor**). It implies a formal, positive, and intentional presentation, like putting an item in a window display (**vitrine**). You use it for work, talent, or products. 2. **'One to watch'** is a great idiom meaning a person or thing that is **'promising'** or **'likely to be successful in the future'** (**promessa, alguém para ficar de olho**). The series title suggests they are highlighting rising stars.", color: "bg-violet-100 border-violet-600", emoji: "🌟" },
+            { id: 28, native: "Call me on this number. We’ll discuss the details.", context: "Used when ending a conversation and providing contact information for follow-up specifics.", brazilianLiteral: "Me ligue neste número. Nós discutiremos a informação.", brazilianError: "Call me *in* this number. / We'll discuss the *information*.", correction: "This expression fixes two common mistakes! 1. **'Call me on...'**: In English, we use the preposition **'on'** when referring to contact via a specific line or device (e.g., 'Call me on my cell,' or 'Call me **on** this number'). Never use 'in this number'! 2. **'Details' vs. 'Information'**: **Information** (informação) is general data or facts. **Details** (detalhes, pormenores) are the specific, necessary facts needed to move forward. In a business or action context, you always discuss the **details** (the how/when/where) rather than the general *information*.", color: "bg-gray-200 border-gray-800", emoji: "📞" },
+        ];
+
+        // --- STATE VARIABLES ---
+        let activeTab = 'lesson';
+        let searchTerm = '';
+        let copyStatus = null; // { id: number, text: string }
+
+        const appElement = document.getElementById('app');
+
+        // --- ICON SVGs (Converted from React components) ---
+        const SearchIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2 text-indigo-500"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`;
+        const CopyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+        const InfoIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 mr-2 text-indigo-600"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+
+        // --- UTILITY FUNCTIONS ---
+
+        /**
+         * Simulates React's state update by setting a new value and re-rendering.
+         */
+        function setState(setter, value) {
+            if (setter === 'activeTab') activeTab = value;
+            else if (setter === 'searchTerm') searchTerm = value;
+            else if (setter === 'copyStatus') copyStatus = value;
+            renderApp();
+        }
+
+        /**
+         * Implements the logic for copying text to the clipboard.
+         */
+        function handleCopy(id, text) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            
+            let statusText;
+            try {
+                // document.execCommand('copy') is the fallback for broader compatibility in iframes
+                document.execCommand('copy');
+                statusText = 'COPIADO!';
+            } catch (err) {
+                statusText = 'Erro ao Copiar';
+            }
+            document.body.removeChild(tempInput);
+
+            setState('copyStatus', { id, text: statusText });
+
+            setTimeout(() => setState('copyStatus', null), 1500);
+        }
+
+        /**
+         * Replaces **bolded** text markers with styled HTML spans.
+         */
+        function renderTextWithHighlights(text) {
+            return text.split(/(\*\*.*?\*\*)/g).map((part) => {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                    const content = part.slice(2, -2);
+                    // Use standard <span> here since it will be injected via innerHTML
+                    return `<span class="font-extrabold text-amber-700 bg-amber-100 px-1 rounded-md shadow-sm transition-colors duration-200 hover:bg-amber-200">${content}</span>`;
+                }
+                return part;
+            }).join('');
+        }
+
+        /**
+         * Generates the HTML string for a single Expression Card.
+         */
+        function ExpressionCard(expression) {
+            const isCopied = copyStatus && copyStatus.id === expression.id;
+
+            return `
+                <div class="p-6 mb-8 rounded-2xl shadow-xl border-l-8 ${expression.color} transition-all duration-300 hover:shadow-2xl transform hover:scale-[1.01]">
+                    <div class="flex items-center mb-4 border-b pb-2 border-gray-200">
+                        <span class="text-4xl mr-4">${expression.emoji}</span>
+                        <h3 class="text-xl md:text-2xl font-black text-gray-800">
+                            Expression <span class="text-indigo-600">${expression.id}</span>
+                        </h3>
+                    </div>
+
+                    <!-- Native Expression Display Block -->
+                    <div class="mb-6 p-4 md:p-6 bg-white border-b-4 border-indigo-500 rounded-xl shadow-inner flex justify-between items-center">
+                        <p class="text-2xl md:text-3xl font-black text-blue-900 leading-snug break-words pr-4">
+                            ${expression.native}
+                        </p>
+                        <button
+                            data-id="${expression.id}"
+                            data-text="${expression.native.replace(/"/g, '&quot;')}"
+                            class="copy-btn flex items-center text-sm px-3 py-2 rounded-full font-bold transition-all duration-300 transform ${
+                                isCopied
+                                    ? 'bg-green-500 text-white shadow-lg'
+                                    : 'bg-indigo-500 text-white hover:bg-indigo-600 active:scale-95'
+                            }"
+                            aria-label="Copy expression ${expression.id}"
+                        >
+                            ${isCopied ? copyStatus.text : `
+                                ${CopyIcon}
+                                <span class='ml-1 hidden sm:inline'>${isCopied ? 'Copied' : 'Copy'}</span>
+                            `}
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-600 italic mt-2 flex items-center">
+                        ${InfoIcon} Contexto: ${expression.context}
+                    </p>
+
+                    <!-- Error and Correction Grid -->
+                    <div class="grid lg:grid-cols-2 gap-6 mt-6 text-sm md:text-base">
+                        <!-- Brazilian Error Section -->
+                        <div class="bg-red-50 p-4 rounded-lg shadow-md border-t-4 border-red-600">
+                            <p class="font-extrabold text-red-700 flex items-center mb-3 text-lg">
+                                <span class="text-2xl mr-2">❌</span> O Erro Comum do Brasileiro
+                            </p>
+                            <p class="font-mono bg-white text-red-900 p-3 rounded-md border border-red-200 italic shadow-inner">
+                                ${expression.brazilianError}
+                            </p>
+                            <p class="mt-3 text-red-500 text-xs">
+                                Tradução literal ou incorreta.
+                            </p>
+                        </div>
+
+                        <!-- The Correction Section -->
+                        <div class="bg-green-50 p-4 rounded-lg shadow-md border-t-4 border-green-600">
+                            <p class="font-extrabold text-green-800 flex items-center mb-3 text-lg">
+                                <span class="text-2xl mr-2">✅</span> Correção e Análise Nativa
+                            </p>
+                            <p class="font-sans text-gray-800 leading-relaxed text-base">
+                                ${renderTextWithHighlights(expression.correction)}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * Filters expressions based on the current search term.
+         */
+        function getFilteredExpressions() {
+            if (!searchTerm) return expressions;
+            const lowerCaseSearch = searchTerm.toLowerCase();
+            return expressions.filter(exp =>
+                exp.native.toLowerCase().includes(lowerCaseSearch) ||
+                exp.brazilianLiteral.toLowerCase().includes(lowerCaseSearch) ||
+                exp.correction.toLowerCase().includes(lowerCaseSearch) ||
+                exp.id.toString() === lowerCaseSearch
+            );
+        }
+
+        // --- MAIN RENDER FUNCTION ---
+
+        function renderApp() {
+            const filteredExpressions = getFilteredExpressions();
+            const expressionsCount = filteredExpressions.length;
+
+            const headerHTML = `
+                <header class="max-w-4xl mx-auto mb-10 p-6 bg-white shadow-2xl rounded-xl border-t-8 border-indigo-700">
+                    <div class='flex items-center'>
+                        <span class='text-6xl mr-4'>👨‍🏫</span>
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-indigo-900">
+                            The Fluent English Workshop
+                        </h1>
+                    </div>
+                    <p class="text-lg text-gray-700 border-t pt-3 mt-3 font-medium">
+                        <span class="font-black text-indigo-600">${teacherName}:</span> Olá, Alunos! Vamos analisar a transcrição deste vídeo para dar um salto do 'English Básico' para o **'Native English'**. Use a busca para encontrar rapidamente o que você precisa!
+                    </p>
+                </header>
+            `;
+
+            const tabsHTML = `
+                <div class="max-w-4xl mx-auto mb-8 sticky top-0 z-10">
+                    <div class="flex border-b-4 border-gray-300 bg-white rounded-t-xl shadow-lg">
+                        <button
+                            data-tab="lesson"
+                            class="tab-btn flex-1 py-4 px-6 text-xl font-black transition-colors duration-300 rounded-tl-xl ${
+                                activeTab === 'lesson'
+                                    ? 'border-b-4 border-indigo-600 text-indigo-800 bg-indigo-50/70 -mb-1'
+                                    : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-100'
+                            }"
+                        >
+                            💡 Análise das Expressões (${expressionsCount})
+                        </button>
+                        <button
+                            data-tab="transcript"
+                            class="tab-btn flex-1 py-4 px-6 text-xl font-black transition-colors duration-300 rounded-tr-xl ${
+                                activeTab === 'transcript'
+                                    ? 'border-b-4 border-indigo-600 text-indigo-800 bg-indigo-50/70 -mb-1'
+                                    : 'text-gray-600 hover:text-indigo-600 hover:bg-gray-100'
+                            }"
+                        >
+                            📋 Transcrição Completa
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            let mainContentHTML = '';
+
+            if (activeTab === 'lesson') {
+                const expressionsList = filteredExpressions.map(ExpressionCard).join('');
+                const searchInputHTML = `
+                    <div class="mb-10 p-4 bg-white rounded-xl shadow-lg flex items-center border border-gray-200">
+                        ${SearchIcon}
+                        <input
+                            type="text"
+                            id="search-input"
+                            placeholder="Buscar por frase nativa, erro brasileiro, ou ID..."
+                            class="flex-grow p-2 text-lg focus:outline-none placeholder-gray-500"
+                            value="${searchTerm}"
+                        />
+                    </div>
+                `;
+
+                const lessonHeader = `
+                    <h2 class="text-4xl font-extrabold text-gray-800 mb-8 border-b-4 border-indigo-300 pb-3">
+                        Mergulhando na Fluência Nativa
+                    </h2>
+                `;
+
+                const noResults = `
+                    <div class='p-10 text-center bg-yellow-100 rounded-xl shadow-inner text-yellow-800 text-lg font-semibold'>
+                        Nenhuma expressão encontrada para "${searchTerm}". Tente refinar sua busca.
+                    </div>
+                `;
+
+                mainContentHTML = `
+                    <div>
+                        ${searchInputHTML}
+                        ${lessonHeader}
+                        ${expressionsCount > 0 ? expressionsList : noResults}
+                    </div>
+                `;
+
+            } else if (activeTab === 'transcript') {
+                mainContentHTML = `
+                    <div class="bg-white p-6 rounded-xl shadow-2xl border border-gray-200">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                            Transcrição com Marcações de Tempo (Time Stamps)
+                        </h2>
+                        <pre class="whitespace-pre-wrap text-sm md:text-base font-mono bg-gray-900 text-green-300 p-6 rounded-lg leading-relaxed shadow-inner overflow-x-auto">
+                            ${transcript.trim()}
+                        </pre>
+                    </div>
+                `;
+            }
+
+            const footerHTML = `
+                <footer class="max-w-4xl mx-auto mt-12 text-center text-gray-600 pt-8 border-t-2 border-gray-300">
+                    <p class="text-md font-medium">
+                        Continue praticando! Use o botão de **Copiar** para salvar as frases e praticar em conversas reais. A fluência vem com a repetição!
+                    </p>
+                </footer>
+            `;
+
+            appElement.innerHTML = `
+                <div class="min-h-screen">
+                    ${headerHTML}
+                    ${tabsHTML}
+                    <main class="max-w-4xl mx-auto">
+                        ${mainContentHTML}
+                    </main>
+                    ${footerHTML}
+                </div>
+            `;
+
+            // --- ATTACH EVENT LISTENERS AFTER RENDERING ---
+
+            // 1. Tab Listeners
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.onclick = () => {
+                    setState('activeTab', button.getAttribute('data-tab'));
+                };
+            });
+
+            // 2. Search Listener (Only for 'lesson' tab)
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.oninput = (e) => {
+                    setState('searchTerm', e.target.value);
+                };
+            }
+
+            // 3. Copy Button Listeners
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.onclick = () => {
+                    const id = parseInt(button.getAttribute('data-id'));
+                    const text = button.getAttribute('data-text');
+                    handleCopy(id, text);
+                };
+            });
+        }
+
+        // Initialize the app on page load
+        window.onload = renderApp;
+    </script>
+</body>
+</html>
